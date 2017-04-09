@@ -15,7 +15,7 @@ jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader(template_dir))
 
 class Blog(db.Model):
     title = db.StringProperty(required=True)
-    body = db.StringProperty(required=True)
+    body = db.TextProperty(required=True)
     created = db.DateTimeProperty(auto_now_add=True)
 
 class NewPost(webapp2.RequestHandler):
@@ -37,7 +37,7 @@ class NewPost(webapp2.RequestHandler):
         else:
             error = 'You need a title and a body! This is a blog, after all!'
             t = jinja_env.get_template("newpost.html")
-            content = t.render(error=error)
+            content = t.render(error=error, title=title, body=body)
             self.response.write(content)
 
 
@@ -55,8 +55,19 @@ class RecentPosts(webapp2.RequestHandler):
         content = t.render(blogs=blogs)
         self.response.write(content)
 
+class ViewPostHandler(webapp2.RequestHandler):
+    def get(self, id):
+        post_id = Blog.get_by_id(int(id))
+        title = post_id.title
+        body = post_id.body
+
+        t = jinja_env.get_template("post.html")
+        content = t.render(title=title, body=body)
+        self.response.write(content)
+
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
     ('/blog', RecentPosts),
-    ('/newpost', NewPost)
+    ('/newpost', NewPost),
+    webapp2.Route('/blog/<id:\d+>', ViewPostHandler)
 ], debug=True)

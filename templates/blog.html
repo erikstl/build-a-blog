@@ -4,7 +4,7 @@
 
     {% for blog in blogs %}
 
-    <div class="title"><h2>{{blog.title}}</h2>
+    <div class="title"><h2><a href="/blog/{{blog.key().id()}}">{{blog.title}}</a></h2>
         <div class="body">{{blog.body}}</div>
     </div>
     <hr>
