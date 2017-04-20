@@ -43,7 +43,7 @@ class NewPost(webapp2.RequestHandler):
 
 class MainHandler(webapp2.RequestHandler):
     def get(self):
-        blogs = db.GqlQuery("SELECT * FROM Blog ORDER BY created DESC LIMIT 5")
+        blogs = db.GqlQuery("SELECT * FROM Blog ORDER BY created DESC")
         t = jinja_env.get_template("blog.html")
         content = t.render(blogs=blogs)
         self.response.write(content)
