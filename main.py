@@ -33,7 +33,10 @@ class NewPost(webapp2.RequestHandler):
             blog = Blog(title=title, body=body)
             blog.put()
 
-            self.redirect('/')
+            #ORM query and store in variable
+            id = blog.key().id()
+
+            self.redirect('/blog/%s' % id)
         else:
             error = 'You need a title and a body! This is a blog, after all!'
             t = jinja_env.get_template("newpost.html")
